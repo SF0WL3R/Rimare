@@ -1,0 +1,23 @@
+using UnityEngine;
+
+public class PlayerInteraction : MonoBehaviour
+{
+    public LayerMask interactableLayer;
+    private KeyCode interactKey = KeyCode.E;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(interactKey))
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, transform.forward, out hit, 3f, interactableLayer))
+            {
+                InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
+                if (interactable != null)
+                {
+                    interactable.Interact();
+                }
+            }
+        }
+    }
+}
