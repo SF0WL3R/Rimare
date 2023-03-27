@@ -1,0 +1,53 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class InteractableObject : MonoBehaviour
+{
+    [SerializeField] private Text interactionText;
+
+    private bool canInteract = false;
+
+    void Start()
+    {
+        interactionText.enabled = false;
+    }
+
+    void Update()
+    {
+        if (canInteract && Input.GetKeyDown(KeyCode.E))
+        {
+            // Interact with the object
+            Debug.Log("Interacting with object");
+
+            // Reset the canInteract flag
+            canInteract = false;
+
+            // Hide the interaction text
+            interactionText.enabled = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            // Set the canInteract flag to true
+            canInteract = true;
+
+            // Show the interaction text
+            interactionText.enabled = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            // Reset the canInteract flag
+            canInteract = false;
+
+            // Hide the interaction text
+            interactionText.enabled = false;
+        }
+    }
+}
