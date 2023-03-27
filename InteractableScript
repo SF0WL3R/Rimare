@@ -1,0 +1,10 @@
+using UnityEngine;
+
+public class Interactable : MonoBehaviour
+{
+    public void Interact()
+    {
+        // Define the action to be taken when the object is interacted with here
+        Debug.Log("Interacting with " + gameObject.name);
+    }
+}
