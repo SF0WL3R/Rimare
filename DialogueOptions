@@ -1,0 +1,19 @@
+void InteractWithNPC()
+{
+    DialogueOptions dialogueOptions = npc.GetComponent<DialogueOptions>();
+
+    // Display the dialogue options on the screen
+    string[] options = dialogueOptions.options;
+    int currentOption = dialogueOptions.currentOption;
+    DisplayDialogueOptions(options, currentOption);
+
+    // Wait for the player to select an option
+    while (!Input.GetKeyDown(KeyCode.Space))
+    {
+        yield return null;
+    }
+
+    // Get the selected option and do something with it
+    string selectedOption = dialogueOptions.SelectOption();
+    DoSomethingWithDialogueOption(selectedOption);
+}
