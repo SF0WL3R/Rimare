@@ -6,13 +6,28 @@ public class CloseCanvas : MonoBehaviour
     public Button closeButton;
     public GameObject canvas;
 
-    void Start()
+    private void Awake()
     {
-        closeButton.onClick.AddListener(Close);
+        if (closeButton == null)
+        {
+            Debug.LogError("CloseButton is not set in the inspector.");
+            return;
+        }
+
+        if (canvas == null)
+        {
+            Debug.LogError("Canvas is not set in the inspector.");
+            return;
+        }
+
+        closeButton.onClick.AddListener(CloseCanvas);
     }
 
-    void Close()
+    private void CloseCanvas()
     {
-        canvas.SetActive(false);
+        if (canvas.activeSelf)
+        {
+            canvas.SetActive(false);
+        }
     }
 }
