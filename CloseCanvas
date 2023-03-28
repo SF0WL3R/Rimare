@@ -1,0 +1,18 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class CloseCanvas : MonoBehaviour
+{
+    public Button closeButton;
+    public GameObject canvas;
+
+    void Start()
+    {
+        closeButton.onClick.AddListener(Close);
+    }
+
+    void Close()
+    {
+        canvas.SetActive(false);
+    }
+}
