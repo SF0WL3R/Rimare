@@ -1,0 +1,54 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class DialogueSystem : MonoBehaviour
+{
+    // References to UI elements
+    public Text dialogueText;
+    public Button[] optionButtons;
+
+    // Array of possible dialogue options
+    private string[] dialogueOptions = { "Hello", "How are you?", "What's your name?", "Goodbye" };
+
+    // Array of NPC responses to each dialogue option
+    private string[] dialogueResponses = { "Hi there!", "I'm doing well, thanks for asking.", "My name is NPC.", "See you later!" };
+
+    // Current dialogue index
+    private int currentDialogueIndex = -1;
+
+    void Start()
+    {
+        // Initialize UI elements
+        for (int i = 0; i < optionButtons.Length; i++)
+        {
+            int optionIndex = i;
+            optionButtons[i].onClick.AddListener(() => OnOptionSelected(optionIndex));
+        }
+        ShowDialogueOptions();
+    }
+
+    // Displays the available dialogue options on the screen
+    void ShowDialogueOptions()
+    {
+        for (int i = 0; i < optionButtons.Length; i++)
+        {
+            if (i <= dialogueOptions.Length - 1)
+            {
+                optionButtons[i].gameObject.SetActive(true);
+                optionButtons[i].GetComponentInChildren<Text>().text = dialogueOptions[i];
+            }
+            else
+            {
+                optionButtons[i].gameObject.SetActive(false);
+            }
+        }
+    }
+
+    // Called when the player selects a dialogue option
+    void OnOptionSelected(int optionIndex)
+    {
+        currentDialogueIndex = optionIndex;
+        dialogueText.text = dialogueResponses[currentDialogueIndex];
+        ShowDialogueOptions();
+    }
+}
