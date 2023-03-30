@@ -1,0 +1,102 @@
+using UnityEngine;
+
+public class DialogueManager : MonoBehaviour
+{
+    public GameObject dialogueUI; // Reference to the dialogue UI game object
+    public TextMeshProUGUI dialogueText; // Reference to the dialogue text object
+    private int dialogueIndex = 0; // Index of the current dialogue
+
+    // Array of dialogues
+    private string[] dialogues = new string[]
+    {
+        "Welcome outsider! You have just walked into the floral city known as Rosewick. Our little town is full of shops and we even have an Inn, everything an adventurer like you may need.",
+        "Hey, I have a question for you. I have never left the comfort of Rosewick. Is our town well known?",
+        "Oh, that’s unfortunate to hear.",
+        "Really! I am so glad to hear that!"
+    };
+
+    private bool isWaitingForPlayerResponse = false; // Flag to indicate if the dialogue is waiting for a player response
+    private int playerResponse = 0; // The player's response
+
+    private void Start()
+    {
+        ShowDialogue(); // Show the first dialogue
+    }
+
+    private void Update()
+    {
+        // Check if the dialogue is waiting for a player response
+        if (isWaitingForPlayerResponse)
+        {
+            // Check if the player has pressed the first option (1)
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                playerResponse = 1;
+                isWaitingForPlayerResponse = false;
+                AdvanceDialogue();
+            }
+            // Check if the player has pressed the second option (2)
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                playerResponse = 2;
+                isWaitingForPlayerResponse = false;
+                AdvanceDialogue();
+            }
+        }
+    }
+
+    // Show the next dialogue in the array
+    private void AdvanceDialogue()
+    {
+        dialogueIndex++;
+
+        // Check if the dialogue is waiting for a player response
+        if (isWaitingForPlayerResponse)
+        {
+            // Branch the dialogue based on the player's response
+            if (playerResponse == 1)
+            {
+                dialogueIndex++; // Skip Baylon's response to option 1
+            }
+        }
+
+        // Check if the dialogue has reached the end of the array
+        if (dialogueIndex >= dialogues.Length)
+        {
+            EndDialogue();
+        }
+        else
+        {
+            ShowDialogue();
+        }
+    }
+
+    // Show the current dialogue in the UI
+    private void ShowDialogue()
+    {
+        string dialogue = dialogues[dialogueIndex];
+
+        // Check if the dialogue is waiting for a player response
+        if (isWaitingForPlayerResponse)
+        {
+            // Append the player response options to the dialogue
+            dialogue += "\n\n[1] No, Rosewick isn’t that well known.\n[2] Yes, Rosewick is mentioned quite a lot.";
+        }
+
+        dialogueText.text = dialogue;
+    }
+
+    // Start the dialogue and show the UI
+    private void ShowDialogue()
+    {
+        dialogueIndex = 0;
+        dialogueUI.SetActive(true);
+        ShowDialogue();
+    }
+
+    // End the dialogue and hide the UI
+    private void EndDialogue()
+    {
+        dialogueUI.SetActive(false);
+    }
+}
