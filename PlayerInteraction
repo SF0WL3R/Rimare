@@ -1,22 +1,66 @@
 using UnityEngine;
 
-public class PlayerInteraction : MonoBehaviour
+public class InteractSystem : MonoBehaviour
 {
-    public LayerMask interactableLayer;
-    private KeyCode interactKey = KeyCode.E;
+    [SerializeField] private KeyCode interactKey = KeyCode.E;
+    [SerializeField] private LayerMask interactableLayer;
 
-    void Update()
+    private bool isInteracting;
+    private Collider2D currentInteractable;
+
+    private void Update()
     {
         if (Input.GetKeyDown(interactKey))
         {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.forward, out hit, 3f, interactableLayer))
+            if (isInteracting)
             {
-                InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
-                if (interactable != null)
-                {
-                    interactable.Interact();
-                }
+                StopInteracting();
+            }
+            else if (currentInteractable != null)
+            {
+                InteractWith(currentInteractable);
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (interactableLayer.Contains(other.gameObject.layer))
+        {
+            currentInteractable = other;
+            ShowInteractPrompt(true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (interactableLayer.Contains(other.gameObject.layer) && currentInteractable == other)
+        {
+            currentInteractable = null;
+            ShowInteractPrompt(false);
+        }
+    }
+
+    private void InteractWith(Collider2D interactable)
+    {
+        Debug.Log("Interacting with " + interactable.name);
+        isInteracting = true;
+    }
+
+    private void StopInteracting()
+    {
+        Debug.Log("Stopped interacting");
+        isInteracting = false;
+    }
+
+    private void ShowInteractPrompt(bool show)
+    {
+        if (currentInteractable != null)
+        {
+            TextMesh prompt = currentInteractable.GetComponentInChildren<TextMesh>();
+            if (prompt != null)
+            {
+                prompt.gameObject.SetActive(show);
             }
         }
     }
