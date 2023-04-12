@@ -1,3 +1,6 @@
+
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,14 +19,37 @@ public class DialogueSystem : MonoBehaviour
     // Current dialogue index
     private int currentDialogueIndex = -1;
 
+    // References to UI elements for options menu
+    public Text optionText;
+    public Button acceptButton;
+    public Button scrollUpButton;
+    public Button scrollDownButton;
+
+    private int currentIndex = 0;
+    private List<string> options = new List<string>();
+
     void Start()
     {
-        // Initialize UI elements
+        // Initialize UI elements for options menu
+        optionText.gameObject.SetActive(false);
+        acceptButton.gameObject.SetActive(false);
+        scrollUpButton.gameObject.SetActive(false);
+        scrollDownButton.gameObject.SetActive(false);
+
+        // Initialize UI elements for dialogue system
         for (int i = 0; i < optionButtons.Length; i++)
         {
             int optionIndex = i;
             optionButtons[i].onClick.AddListener(() => OnOptionSelected(optionIndex));
         }
+
+        // Load options from Option1.txt and Option2.txt
+        options.Add(LoadOption("Option1.txt"));
+        options.Add(LoadOption("Option2.txt"));
+
+        // Set initial option text
+        optionText.text = options[currentIndex];
+
         ShowDialogueOptions();
     }
 
@@ -50,5 +76,49 @@ public class DialogueSystem : MonoBehaviour
         currentDialogueIndex = optionIndex;
         dialogueText.text = dialogueResponses[currentDialogueIndex];
         ShowDialogueOptions();
+
+        // Show options menu
+        optionText.gameObject.SetActive(true);
+        acceptButton.gameObject.SetActive(true);
+        scrollUpButton.gameObject.SetActive(true);
+        scrollDownButton.gameObject.SetActive(true);
     }
-}
+
+    void Update()
+    {
+        // Add input handling logic here for scrolling through options
+    }
+
+    // Called when the player accepts the selected option in the options menu
+    void OnAcceptButtonClick()
+    {
+        Debug.Log("Selected option: " + options[currentIndex]);
+        // Add logic for handling the selected option here
+    }
+
+    // Called when the player scrolls up in the options menu
+    void OnScrollUpButtonClick()
+    {
+        currentIndex--;
+        if (currentIndex < 0)
+        {
+            currentIndex = options.Count - 1;
+        }
+        optionText.text = options[currentIndex];
+    }
+
+    // Called when the player scrolls down in the options menu
+    void OnScrollDownButtonClick()
+    {
+        currentIndex++;
+        if (currentIndex >= options.Count)
+        {
+            currentIndex = 0;
+        }
+        optionText.text = options[currentIndex];
+    }
+
+    // Method for loading options from files
+    private string LoadOption(string optionFileName)
+    {
+        // Add logic for loading options
